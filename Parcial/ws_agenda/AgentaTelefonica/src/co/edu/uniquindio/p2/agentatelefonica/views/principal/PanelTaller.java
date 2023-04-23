@@ -12,8 +12,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-public class PanelInternoPrincipal extends BorderPane {
-	public PanelInternoPrincipal() {
+public class PanelTaller extends BorderPane {
+	private EventHandler<? super MouseEvent> eventoVolver;
+
+	public PanelTaller() {
+		initComponents();
+	}
+
+	public PanelTaller(EventHandler<? super MouseEvent> eventoVolver) {
+		this.eventoVolver = eventoVolver;
 		initComponents();
 	}
 
@@ -50,6 +57,7 @@ public class PanelInternoPrincipal extends BorderPane {
 
 		box.setId("centered-box");
 		setCenter(box);
+		setBottom(new Boton("Volver", this.eventoVolver, "btn-volver"));
 
 	}
 }
