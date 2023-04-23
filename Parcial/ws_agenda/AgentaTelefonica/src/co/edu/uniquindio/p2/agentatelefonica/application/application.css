@@ -1,0 +1,41 @@
+#lbl-header {
+	-fx-text-fill: white;
+	-fx-font-weight: bold;
+	-fx-font-size: 15.0;
+}
+#titulo-header {
+	-fx-text-fill: white;
+	-fx-font-weight: bold;
+	-fx-font-size: 30.0;
+}
+#header {
+	-fx-background-color: #6600cc;
+	-fx-alignment: center;
+}
+#btn-case {
+	-fx-background-color: #3962E6; 
+}
+#btn {
+	-fx-ellipsis-string: "";
+	-fx-alignment: center;
+	-fx-text-fill: white;
+	-fx-font-weight: bold;
+	-fx-font-size: 20.0;
+	-fx-max-width: 1000000.0;
+	-fx-max-height: 1000000.0;
+}
+#btn:hover {
+	-fx-background-color: rgb(0.0,0.0,0.0,0.15);
+}
+#btn:pressed {
+	-fx-background-color: rgb(0.0,0.0,0.0,0.3);
+}
+#centered-box{
+	-fx-alignment: center;
+}
+#btn-volver {
+	-fx-background-color: #DB2A10;
+}
+#bg-red {
+	-fx-background-color: red;
+}

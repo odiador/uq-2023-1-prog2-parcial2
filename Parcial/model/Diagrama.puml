@@ -1,0 +1,43 @@
+@startuml Diagrama
+
+skinparam Linetype ortho
+skinparam style strictuml
+
+class Contacto {
+    -nombre : String
+    -alias : String
+    -direccion : String
+    -email : String
+    -telefono : String
+}
+
+class Grupo {
+    -nombre : String
+}
+
+enum Categoria <<enumeration>> {
+    OFICINA
+    FIESTA
+    AMIGOS
+    FAMILIA
+}
+
+class Reunion {
+    -fecha : String
+    -descripcion : String
+    -fechaHora : LocalDateTime
+}
+
+class Agenda {
+    -nombre : String
+}
+
+Agenda *--> Contacto : -listaContactos
+Agenda *-left-> Reunion : -listaReuniones
+Agenda *-right-> Grupo : -listaGrupos
+
+Reunion "-listaReuniones 1" o-- "-listaContactos *" Contacto
+Grupo "-listaReuniones 1" o-- "-listaContactos *" Contacto
+
+Grupo --> Categoria
+@enduml

@@ -1,0 +1,14 @@
+Nos piden realizar una agenda telefónica de contactos (usar arreglos).
+La agenda de contactos está formada por un conjunto de contactos, una lista de grupos de contactos y una lista de reuniones.
+- Un contacto está definido por un (nombre, alias, dirección, teléfonos, email. Un contacto es igual a otro cuando sus nombres y teléfonos son iguales, un contacto puede pertenecer a varios grupos.
+- Un grupo tiene nombre, categoría(oficina, fiesta, amigos, familia) y la lista de contactos solo puede tener 10 contactos.
+- Una reunión debe tener descripción, fecha, hora y contactos que van a asistir a la reunión.
+Los métodos de la agenda serán los siguientes:
+- aniadirContacto(Contacto c): Añade un contacto a la agenda, sino se pueden meter más a la agenda se indicará por pantalla. No se pueden agregar contactos que existan, es decir, no podemos duplicar contactos.
+- existeContacto(Conctacto c): indica si el contacto pasado existe o no.
+- listarContactos(): Lista toda la agenda
+- buscaContacto(String nombre): busca un contacto por su nombre y muestra su teléfono.
+- eliminarContacto(Contacto c): elimina el contacto de la agenda, indica si se ha eliminado o no por pantalla
+- agendaLlena(): indica si la agenda está llena.
+- huecosLibres(): indica cuantos contactos más podemos meter.
+Crea la interfaz de usuario.
