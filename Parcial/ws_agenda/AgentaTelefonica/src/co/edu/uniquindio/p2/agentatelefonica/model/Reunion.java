@@ -1,32 +1,46 @@
 package co.edu.uniquindio.p2.agentatelefonica.model;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import co.edu.uniquindio.p2.agentatelefonica.exceptions.ArregloLlenoException;
+import co.edu.uniquindio.p2.agentatelefonica.exceptions.ContactoException;
+import co.edu.uniquindio.p2.agentatelefonica.exceptions.ObjetoNoExisteException;
+import co.edu.uniquindio.p2.agentatelefonica.util.Utility;
 
 public class Reunion implements Serializable {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private final String nombre;
-	private Contacto[] listaContactos;
+	private final Contacto[] listaContactos;
 	private String descripcion;
-	private LocalDateTime fechaHora;
+	private LocalDate fecha;
+	private LocalTime hora;
+	private final Nota[] listaNotas;
 
 	/**
 	 * Es el constructor de la clase reunion
-	 * 
+	 *
 	 * @param nombre
 	 * @param listaContactos
 	 */
-	public Reunion(String nombre, String descripcion, LocalDateTime fechaHora, Contacto[] listaContactos) {
+	public Reunion(String nombre, String descripcion, LocalDate fecha, LocalTime hora, Contacto[] listaContactos,
+			Nota[] listaNotas) {
 		super();
 		this.nombre = nombre;
 		this.descripcion = descripcion;
-		this.fechaHora = fechaHora;
+		this.fecha = fecha;
+		this.hora = hora;
 		this.listaContactos = listaContactos;
+		this.listaNotas = listaNotas;
 	}
 
 	/**
@@ -34,34 +48,93 @@ public class Reunion implements Serializable {
 	 */
 	public Reunion() {
 		this.nombre = null;
+		this.listaContactos = new Contacto[0];
+		this.listaNotas = new Nota[0];
 	}
 
 	/**
 	 * Es el constructor de la clase reunion solo con el nombre de la reunion
-	 * 
+	 *
 	 * @param nombre
 	 */
 	public Reunion(String nombre) {
 		this.nombre = nombre;
+		this.listaContactos = new Contacto[0];
+		this.listaNotas = new Nota[0];
 	}
 
 	/**
 	 * Es el constructor de la reunion pero sin contar la lista de contactos
-	 * 
+	 *
 	 * @param nombre
 	 * @param descripcion
 	 * @param fechaHora
 	 */
-	public Reunion(String nombre, String descripcion, LocalDateTime fechaHora) {
+	public Reunion(String nombre, String descripcion, LocalDate fecha, LocalTime hora) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
-		this.fechaHora = fechaHora;
+		this.hora = hora;
+		this.fecha = fecha;
 		this.listaContactos = new Contacto[0];
+		this.listaNotas = new Nota[0];
 	}
 
-	@Override
-	public String toString() {
-		return "Reunion [nombre=" + nombre + ", listaContactos=" + Arrays.toString(listaContactos) + "]";
+	/**
+	 * Añade un contacto al arreglo de contactos, en caso de que este lleno se
+	 *
+	 * @param c
+	 * @throws ObjetoNoExisteException en caso de que el contacto {@code c} sea null
+	 * @throws ContactoException       en caso de que el contacto ya exista
+	 * @throws ArregloLlenoException   en caso de que el arreglo de contactos este
+	 *                                 lleno
+	 */
+	public void aniadirContacto(Contacto c) throws ObjetoNoExisteException, ContactoException, ArregloLlenoException {
+		Utility.throwifNull(c, "El contacto no existe");
+		if (existeContacto(c))
+			throw new ContactoException("El contacto no se pudo agregar (ya existe)");
+		int posLibre = buscarPosLibreContacto();
+		if (posLibre == -1)
+			throw new ArregloLlenoException("La lista de contactos esta llena");
+		listaContactos[posLibre] = c;
+	}
+
+	/**
+	 * Obtiene la primera posicion libre de un contacto, si no se encuentra se
+	 * retorna un -1
+	 *
+	 * @see {@link #buscarPosContacto(Contacto)}
+	 * @return -1 si no se encuentra, cualquier otro numero en caso de que si se
+	 *         encuentre
+	 */
+	private int buscarPosLibreContacto() {
+		return buscarPosContacto(null);
+	}
+
+	/**
+	 * Determina si el contacto existe o no dependiendo de que si la posicion del
+	 * contacto no sea null
+	 *
+	 * @see {@link #buscarPosContacto(Contacto)}
+	 * @param c
+	 * @return true si existe
+	 */
+	public boolean existeContacto(Contacto c) {
+		return buscarPosContacto(c) != -1;
+	}
+
+	/**
+	 * Busca la posicion en la que se encuentra un determinado contacto, usa el
+	 * metodo indexOf del arraylist, el cual usa la condicion (c==null ?
+	 * get(i)==null : c.equals(get(i))), o -1 en caso de que no se encuentre
+	 *
+	 * @param c
+	 * @return el indice de la posicion del contacto o -1 si no se encuentra
+	 */
+	private int buscarPosContacto(Contacto c) {
+		ArrayList<Contacto> auxListaContactos = Arrays.asList(listaContactos).stream()
+				.collect(Collectors.toCollection(ArrayList::new));
+		int indexOf = auxListaContactos.indexOf(c);
+		return indexOf;
 	}
 
 	/**
@@ -78,13 +151,6 @@ public class Reunion implements Serializable {
 		return listaContactos;
 	}
 
-	/**
-	 * @param listaContactos the listaContactos to set
-	 */
-	public void setListaContactos(Contacto[] listaContactos) {
-		this.listaContactos = listaContactos;
-	}
-
 	public String getDescripcion() {
 		return descripcion;
 	}
@@ -93,12 +159,48 @@ public class Reunion implements Serializable {
 		this.descripcion = descripcion;
 	}
 
+	/**
+	 * Obtiene la fecha y hora de la reunion
+	 *
+	 * @return
+	 */
 	public LocalDateTime getFechaHora() {
-		return fechaHora;
+		return LocalDateTime.of(fecha, hora);
 	}
 
-	public void setFechaHora(LocalDateTime fechaHora) {
-		this.fechaHora = fechaHora;
+	/**
+	 * @return the fecha
+	 */
+	public LocalDate getFecha() {
+		return fecha;
+	}
+
+	/**
+	 * @param fecha the fecha to set
+	 */
+	public void setFecha(LocalDate fecha) {
+		this.fecha = fecha;
+	}
+
+	/**
+	 * @return the hora
+	 */
+	public LocalTime getHora() {
+		return hora;
+	}
+
+	/**
+	 * @param hora the hora to set
+	 */
+	public void setHora(LocalTime hora) {
+		this.hora = hora;
+	}
+
+	/**
+	 * @return the listaNotas
+	 */
+	public Nota[] getListaNotas() {
+		return listaNotas;
 	}
 
 	@Override
@@ -117,4 +219,11 @@ public class Reunion implements Serializable {
 		Reunion other = (Reunion) obj;
 		return Objects.equals(nombre, other.nombre);
 	}
+
+	@Override
+	public String toString() {
+		return String.format("Reunion [nombre=%s, listaContactos=%s, descripcion=%s, fecha=%s, hora=%s, listaNotas=%s]",
+				nombre, Arrays.toString(listaContactos), descripcion, fecha, hora, Arrays.toString(listaNotas));
+	}
+
 }

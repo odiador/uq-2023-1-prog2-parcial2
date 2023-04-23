@@ -84,7 +84,7 @@ public class Utility {
 
 	/**
 	 * Intenta pasar una cadena a un entero, si no se puede se muestra un error
-	 * 
+	 *
 	 * @param cadena
 	 * @return
 	 * @throws CampoException
@@ -97,8 +97,53 @@ public class Utility {
 		}
 	}
 
+	/**
+	 * Muestra un error si un objeto es null
+	 *
+	 * @param object
+	 * @param msg
+	 * @throws ObjetoNoExisteException
+	 */
 	public static void throwifNull(Object object, String msg) throws ObjetoNoExisteException {
 		if (object == null)
 			throw new ObjetoNoExisteException(msg);
+	}
+
+	/**
+	 * Muestra un error si un arreglo tiene nulls con un mensaje especifico
+	 *
+	 * @param object
+	 * @param msg
+	 * @throws ObjetoNoExisteException
+	 */
+	public static void throwifArrHasNulls(Object[] object, String msg) throws ObjetoNoExisteException {
+		for (Object object2 : object)
+			throwifNull(object2, msg);
+	}
+
+	/**
+	 * Determina si una cadena {@code cadena} tiene unas letras especificas
+	 * {@code letras} <br>
+	 * Usa un stringbuilder con la siguiente condicion en un ciclo que va por cada
+	 * caracter de las letras: <br>
+	 *
+	 * <pre> {@code
+	 * (stringbuilder.indexOf(Character.toString(letras.charAt(i))) == -1)
+	 * }<br>
+	 * </pre>
+	 *
+	 * El indexof del {@code StringBuilder} retorna un -1 si no se encuentra, y si
+	 * no se encuentra se debe de retornar un falso
+	 *
+	 * @param cadena
+	 * @param letras
+	 * @return true si contiene todas los caracteres de las letras al menos una vez
+	 */
+	public static boolean cadenaTieneLetras(String cadena, String letras) {
+		StringBuilder stringbuilder = new StringBuilder(cadena.toLowerCase());
+		for (int i = 0; i < letras.length(); i++)
+			if (stringbuilder.indexOf(Character.toString(letras.toLowerCase().charAt(i))) == -1)
+				return false;
+		return true;
 	}
 }

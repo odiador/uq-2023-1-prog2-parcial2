@@ -2,7 +2,6 @@ package co.edu.uniquindio.p2.agentatelefonica.controllers;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.ArregloLlenoException;
@@ -15,6 +14,16 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
 public class CtrlReunion {
+	/**
+	 * Añade una reunion a la agenda, si pasa algo que no se deba, se muestra un
+	 * error
+	 *
+	 * @param nombre
+	 * @param descripcion
+	 * @param fecha
+	 * @param horas
+	 * @param minutos
+	 */
 	public static void anadirReunion(String nombre, String descripcion, LocalDate fecha, String horas, String minutos) {
 		try {
 			anadirReunionThrows(nombre, descripcion, fecha, horas, minutos);
@@ -24,6 +33,21 @@ public class CtrlReunion {
 		}
 	}
 
+	/**
+	 * Añade una reunion a la agenda, si pasa algo que no se deba, salta un error
+	 *
+	 * @param nombre
+	 * @param descripcion
+	 * @param fecha
+	 * @param horas
+	 * @param minutos
+	 * @throws CampoException          en caso de que no esten llenos todos los
+	 *                                 campos
+	 * @throws ObjetoNoExisteException en caso de que la fecha sea null
+	 * @throws ReunionException        en caso de que la reunion ya exista
+	 * @throws ArregloLlenoException   en caso de que el arreglo de reuniones este
+	 *                                 lleno
+	 */
 	public static void anadirReunionThrows(String nombre, String descripcion, LocalDate fecha, String horas,
 			String minutos) throws CampoException, ObjetoNoExisteException, ReunionException, ArregloLlenoException {
 		Utility.throwifNull(fecha, "Recuerda llenar la fecha");
@@ -36,21 +60,20 @@ public class CtrlReunion {
 		int horasNum = Utility.pasarEnteroThrows(horas);
 		int minutosNum = Utility.pasarEnteroThrows(minutos);
 		try {
-			LocalTime localTime = LocalTime.of(horasNum, minutosNum);
-			LocalDateTime fechaHora = LocalDateTime.of(fecha, localTime);
-			Reunion reunion = new Reunion(nombre, descripcion, fechaHora);
+			LocalTime hora = LocalTime.of(horasNum, minutosNum);
+			Reunion reunion = new Reunion(nombre, descripcion, fecha, hora);
 			SerializedData data = new SerializedData();
 			data.getAgenda().agregarReunion(reunion);
 			data.actualizarAgenda();
 		} catch (DateTimeException e) {
-			throw new ObjetoNoExisteException("Organiza bien la fecha y la hora");
+			throw new ObjetoNoExisteException("Organiza bien la fecha y hora");
 		}
 	}
 
 	/**
 	 * Elimina una reunion con su nombre, en caso de que pase algo no deseado se
 	 * suelta un error
-	 * 
+	 *
 	 * @param nombreReunion
 	 * @throws CampoException
 	 * @throws ReunionException
@@ -68,7 +91,7 @@ public class CtrlReunion {
 	/**
 	 * Elimina una reunion con su nombre, en caso de que pase algo no deseado
 	 * muestra una alerta
-	 * 
+	 *
 	 * @param nombreReunion
 	 */
 	public static void eliminarReunion(String nombreReunion) {

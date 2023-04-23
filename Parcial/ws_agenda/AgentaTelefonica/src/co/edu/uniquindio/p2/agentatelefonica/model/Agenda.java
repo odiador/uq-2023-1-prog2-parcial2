@@ -15,7 +15,7 @@ import co.edu.uniquindio.p2.agentatelefonica.util.Utility;
 
 public class Agenda implements Serializable {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private String nombre;
@@ -23,6 +23,14 @@ public class Agenda implements Serializable {
 	private Reunion[] listaReuniones;
 	private Grupo[] listaGrupos;
 
+	/**
+	 * Es el constructor de la agenda
+	 *
+	 * @param nombre
+	 * @param listaContactosLength
+	 * @param listaReunionesLength
+	 * @param listaGruposLength
+	 */
 	public Agenda(String nombre, int listaContactosLength, int listaReunionesLength, int listaGruposLength) {
 		super();
 		this.nombre = nombre;
@@ -31,13 +39,64 @@ public class Agenda implements Serializable {
 		this.listaGrupos = new Grupo[listaGruposLength];
 	}
 
+	/**
+	 * Es el constructor de la agenda solo con el nombre, todas las listas tienen
+	 * tamanio 0
+	 *
+	 * @param nombre
+	 */
 	public Agenda(String nombre) {
 		this(nombre, 0, 0, 0);
 	}
 
 	/**
+	 * <b>[PUNTO #2]</b><br>
+	 * Elimina los contactos que contengan unos caracteres especificos
+	 *
+	 * @param caracteres
+	 */
+	public void eliminarContactosLetras(char... caracteres) {
+		eliminarContactosLetras(new StringBuilder().append(caracteres).toString());
+	}
+
+	/**
+	 * Elimina los contactos que contengan unos caracteres especificos
+	 *
+	 * @param caracteres
+	 */
+	public void eliminarContactosLetras(String caracteres) {
+		for (int i = 0; i < listaContactos.length; i++) {
+			if (listaContactos[i] == null)
+				continue;
+			if (listaContactos[i].nombreTieneLetras(caracteres)) {
+				listaContactos[i] = null;
+			}
+		}
+	}
+
+	/**
+	 * <b>[PUNTO #3]</b><br>
+	 * Lista todos los grupos que tengan un tipo especifico y que todos sus
+	 * contactos tengan una direccion especifica
+	 *
+	 * @param categoria
+	 * @param direccionContacto
+	 * @return
+	 * @throws ObjetoNoExisteException en caso de que no exista
+	 */
+	public ArrayList<Grupo> listarGruposTipoConContactoDireccion(CategoriaGrupo categoria, String direccionContacto)
+			throws ObjetoNoExisteException {
+		Utility.throwifNull(categoria, "La categoria del grupo no existe");
+		Utility.throwifNull(direccionContacto, "La direccon de los contactos no existe");
+
+		return Arrays.stream(listaGrupos)
+				.filter(grupo -> grupo != null && grupo.tieneCategoriaDireccionesContacto(categoria, direccionContacto))
+				.collect(Collectors.toCollection(ArrayList::new));
+	}
+
+	/**
 	 * Añade un contacto al arreglo de contactos, en caso de que este lleno se
-	 * 
+	 *
 	 * @param c
 	 * @throws ObjetoNoExisteException en caso de que el contacto {@code c} sea null
 	 * @throws ContactoException       en caso de que el contacto ya exista
@@ -57,7 +116,7 @@ public class Agenda implements Serializable {
 	/**
 	 * Determina si el contacto existe o no dependiendo de que si la posicion del
 	 * contacto no sea null
-	 * 
+	 *
 	 * @see {@link #buscarPosContacto(Contacto)}
 	 * @param c
 	 * @return true si existe
@@ -70,7 +129,7 @@ public class Agenda implements Serializable {
 	 * Busca la posicion en la que se encuentra un determinado contacto, usa el
 	 * metodo indexOf del arraylist, el cual usa la condicion (c==null ?
 	 * get(i)==null : c.equals(get(i))), o -1 en caso de que no se encuentre
-	 * 
+	 *
 	 * @param c
 	 * @return el indice de la posicion del contacto o -1 si no se encuentra
 	 */
@@ -84,7 +143,7 @@ public class Agenda implements Serializable {
 	/**
 	 * Agrega una reunion, muestra errores si no pasan las cosas como deberian de
 	 * pasar
-	 * 
+	 *
 	 * @param reunion
 	 * @throws ObjetoNoExisteException
 	 * @throws ReunionException
@@ -103,7 +162,7 @@ public class Agenda implements Serializable {
 
 	/**
 	 * Busca la posicion en la que una reunion esta libre
-	 * 
+	 *
 	 * @return
 	 */
 	private int buscarPosLibreReunion() {
@@ -112,7 +171,7 @@ public class Agenda implements Serializable {
 
 	/**
 	 * Busca una reunion, retorna null si no se encuentra
-	 * 
+	 *
 	 * @param reunion
 	 */
 	private Reunion buscarReunion(Reunion reunion) {
@@ -132,7 +191,7 @@ public class Agenda implements Serializable {
 	/**
 	 * Busca un contacto a partir del contacto, si no se encuentra se retorna un
 	 * null
-	 * 
+	 *
 	 * @param contacto
 	 * @return el contacto, si no se encuentra null
 	 */
@@ -145,7 +204,7 @@ public class Agenda implements Serializable {
 
 	/**
 	 * Busca un contacto y si no se encuentra se muestra un error
-	 * 
+	 *
 	 * @param contacto
 	 * @return el contacto encontrado
 	 * @throws ContactoException
@@ -160,7 +219,7 @@ public class Agenda implements Serializable {
 	/**
 	 * Obtiene la primera posicion libre de un contacto, si no se encuentra se
 	 * retorna un -1
-	 * 
+	 *
 	 * @see {@link #buscarPosContacto(Contacto)}
 	 * @return -1 si no se encuentra, cualquier otro numero en caso de que si se
 	 *         encuentre
@@ -172,7 +231,7 @@ public class Agenda implements Serializable {
 	/**
 	 * Elimina el contacto de la agenda, muestra errores en caso de que no se pueda
 	 * eliminar
-	 * 
+	 *
 	 * @param c
 	 * @throws ObjetoNoExisteException en caso de que el contacto enviado sea null
 	 * @throws ContactoException       en caso de que no exista el contacto
@@ -187,7 +246,7 @@ public class Agenda implements Serializable {
 
 	/**
 	 * Determina si la agenda esta llena o no
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean agendaLlena() {
@@ -196,7 +255,7 @@ public class Agenda implements Serializable {
 
 	/**
 	 * Indica cuantos contactos más podemos meter.
-	 * 
+	 *
 	 * @return la cantidad de huecos libres
 	 */
 	public int huecosLibres() {
@@ -209,7 +268,7 @@ public class Agenda implements Serializable {
 
 	/**
 	 * Obtiene la cantidad de espacios del contacto
-	 * 
+	 *
 	 * @return
 	 */
 	public int cantidadEspaciosContactos() {
@@ -218,7 +277,7 @@ public class Agenda implements Serializable {
 
 	/**
 	 * Obtiene la cantidad de contactos ocupados
-	 * 
+	 *
 	 * @return
 	 */
 	public int cantidadOcupados() {
@@ -227,7 +286,7 @@ public class Agenda implements Serializable {
 
 	/**
 	 * Obtiene la lista de contactos
-	 * 
+	 *
 	 * @return
 	 */
 	public ArrayList<Contacto> listarContactos() {
@@ -241,8 +300,23 @@ public class Agenda implements Serializable {
 	}
 
 	/**
+	 * Elimina una reunion de la agenda, muestra errores si no se puede
+	 *
+	 * @param reunion
+	 * @throws ReunionException
+	 * @throws ObjetoNoExisteException
+	 */
+	public void eliminarReunion(Reunion reunion) throws ReunionException, ObjetoNoExisteException {
+		Utility.throwifNull(reunion, "La reunion enviada no funciona para eliminar");
+		int pos = buscarPosReunion(reunion);
+		if (pos == -1)
+			throw new ReunionException("La reunion no existe, no se puede eliminar");
+		listaReuniones[pos] = null;
+	}
+
+	/**
 	 * Obtiene el nombre de la agenda
-	 * 
+	 *
 	 * @return
 	 */
 	public String getNombre() {
@@ -251,7 +325,7 @@ public class Agenda implements Serializable {
 
 	/**
 	 * Cambia el nombre de la agenda
-	 * 
+	 *
 	 * @param nombre
 	 */
 	public void setNombre(String nombre) {
@@ -260,7 +334,7 @@ public class Agenda implements Serializable {
 
 	/**
 	 * Obtiene la lista de contactos de la agenda
-	 * 
+	 *
 	 * @return
 	 */
 	public Contacto[] getListaContactos() {
@@ -269,7 +343,7 @@ public class Agenda implements Serializable {
 
 	/**
 	 * Cambia la lista de contactos de la agenda
-	 * 
+	 *
 	 * @param listaContactos
 	 */
 	public void setListaContactos(Contacto[] listaContactos) {
@@ -278,7 +352,7 @@ public class Agenda implements Serializable {
 
 	/**
 	 * Obtiene la lista de reuniones de la agenda
-	 * 
+	 *
 	 * @return
 	 */
 	public Reunion[] getListaReuniones() {
@@ -287,7 +361,7 @@ public class Agenda implements Serializable {
 
 	/**
 	 * Obtiene la lista de reuniones de la agenda
-	 * 
+	 *
 	 * @param listaReuniones
 	 */
 	public void setListaReuniones(Reunion[] listaReuniones) {
@@ -296,7 +370,7 @@ public class Agenda implements Serializable {
 
 	/**
 	 * Obtiene la lista de grupos de la agenda
-	 * 
+	 *
 	 * @return
 	 */
 	public Grupo[] getListaGrupos() {
@@ -304,9 +378,9 @@ public class Agenda implements Serializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * Cambia la lista de grupos de la agenda
-	 * 
+	 *
 	 * @param listaGrupos
 	 */
 	public void setListaGrupos(Grupo[] listaGrupos) {
@@ -334,20 +408,5 @@ public class Agenda implements Serializable {
 	public String toString() {
 		return String.format("Agenda [nombre=%s, listaContactos=%s, listaReuniones=%s, listaGrupos=%s]", nombre,
 				Arrays.toString(listaContactos), Arrays.toString(listaReuniones), Arrays.toString(listaGrupos));
-	}
-
-	/**
-	 * Elimina una reunion de la agenda, muestra errores si no se puede
-	 * 
-	 * @param reunion
-	 * @throws ReunionException
-	 * @throws ObjetoNoExisteException
-	 */
-	public void eliminarReunion(Reunion reunion) throws ReunionException, ObjetoNoExisteException {
-		Utility.throwifNull(reunion, "La reunion enviada no funciona para eliminar");
-		int pos = buscarPosReunion(reunion);
-		if (pos == -1)
-			throw new ReunionException("La reunion no existe, no se puede eliminar");
-		listaReuniones[pos] = null;
 	}
 }

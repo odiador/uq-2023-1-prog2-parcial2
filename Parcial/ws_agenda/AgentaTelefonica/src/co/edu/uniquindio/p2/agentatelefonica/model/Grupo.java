@@ -13,7 +13,7 @@ import co.edu.uniquindio.p2.agentatelefonica.util.Utility;
 
 public class Grupo implements Serializable {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private String nombre;
@@ -22,7 +22,7 @@ public class Grupo implements Serializable {
 
 	/**
 	 * Es el constructor del grupo con su nombre y categoria
-	 * 
+	 *
 	 * @param nombre
 	 * @param categoria
 	 */
@@ -37,9 +37,16 @@ public class Grupo implements Serializable {
 	 * Es el constructor del grupo vacio
 	 */
 	public Grupo() {
-
 	}
 
+	/**
+	 * Añade un contacto al grupo, si no se encuentra
+	 *
+	 * @param c
+	 * @throws ObjetoNoExisteException
+	 * @throws ContactoException
+	 * @throws ArregloLlenoException
+	 */
 	public void aniadirContacto(Contacto c) throws ObjetoNoExisteException, ContactoException, ArregloLlenoException {
 		Utility.throwifNull(c, "El contacto no existe");
 		if (existeContacto(c))
@@ -47,13 +54,14 @@ public class Grupo implements Serializable {
 		int posLibre = buscarPosLibreContacto();
 		if (posLibre == -1)
 			throw new ArregloLlenoException("La lista de contactos esta llena");
+		c.addGrupo(this);
 		listaContactos[posLibre] = c;
 	}
 
 	/**
 	 * Obtiene la primera posicion libre de un contacto, si no se encuentra se
 	 * retorna un -1
-	 * 
+	 *
 	 * @see {@link #buscarPosContacto(Contacto)}
 	 * @return -1 si no se encuentra, cualquier otro numero en caso de que si se
 	 *         encuentre
@@ -65,7 +73,7 @@ public class Grupo implements Serializable {
 	/**
 	 * Determina si el contacto existe o no dependiendo de que si la posicion del
 	 * contacto no sea null
-	 * 
+	 *
 	 * @see {@link #buscarPosContacto(Contacto)}
 	 * @param c
 	 * @return true si existe
@@ -78,7 +86,7 @@ public class Grupo implements Serializable {
 	 * Busca la posicion en la que se encuentra un determinado contacto, usa el
 	 * metodo indexOf del arraylist, el cual usa la condicion (c==null ?
 	 * get(i)==null : c.equals(get(i))), o -1 en caso de que no se encuentre
-	 * 
+	 *
 	 * @param c
 	 * @return el indice de la posicion del contacto o -1 si no se encuentra
 	 */
@@ -92,7 +100,7 @@ public class Grupo implements Serializable {
 	/**
 	 * Busca un contacto a partir del contacto, si no se encuentra se retorna un
 	 * null
-	 * 
+	 *
 	 * @param contacto
 	 * @return el contacto, si no se encuentra null
 	 */
@@ -105,7 +113,7 @@ public class Grupo implements Serializable {
 
 	/**
 	 * Busca un contacto y si no se encuentra se muestra un error
-	 * 
+	 *
 	 * @param contacto
 	 * @return el contacto encontrado
 	 * @throws ContactoException
@@ -119,7 +127,7 @@ public class Grupo implements Serializable {
 
 	/**
 	 * Indica cuantos contactos más podemos meter.
-	 * 
+	 *
 	 * @return la cantidad de huecos libres
 	 */
 	public int huecosLibres() {
@@ -132,6 +140,49 @@ public class Grupo implements Serializable {
 
 	public boolean hayHuecosLibres() {
 		return huecosLibres() != 0;
+	}
+
+	/**
+	 * Determina si el grupo tiene una categoria especifica y si el grupo tiene
+	 * todos sus contactos con una direccion especifica
+	 *
+	 * @see
+	 *      <li>{@link #tieneCategoria(CategoriaGrupo)}
+	 *      <li>{@link #tieneDireccionesContacto(String)}
+	 * @param categoria
+	 * @param direccionContacto
+	 * @return
+	 */
+	public boolean tieneCategoriaDireccionesContacto(CategoriaGrupo categoria, String direccionContacto) {
+		return tieneCategoria(categoria) && tieneDireccionesContacto(direccionContacto);
+	}
+
+	/**
+	 * Determina si el grupo tiene una categoria especifica
+	 *
+	 * @param categoria
+	 * @return true si tiene la categoria
+	 */
+	public boolean tieneCategoria(CategoriaGrupo categoria) {
+		return this.categoria == categoria;
+	}
+
+	/**
+	 * Determina si el grupo tiene todos sus contactos con una direccion especifica
+	 *
+	 * @param direccionContacto
+	 * @return
+	 */
+	public boolean tieneDireccionesContacto(String direccionContacto) {
+		for (Contacto contacto : listaContactos) {
+			if (contacto == null)
+				continue;
+			if (!contacto.tieneDireccion(direccionContacto))
+				return false;
+		}
+		if (listaContactos.length == 0)
+			return false;
+		return true;
 	}
 
 	/**

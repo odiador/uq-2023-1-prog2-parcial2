@@ -1,11 +1,11 @@
 package co.edu.uniquindio.p2.agentatelefonica.model;
 
-public enum CategoriaGrupo {
-	OFICINA("Oficina"), FIESTA("Fiesta"), AMIGOS("Amigos"), FAMILIA("Familia");
+public enum CategoriaNota {
+	PRIVATA("Privada"), PUBLICA("Publica");
 
 	private String nombre;
 
-	private CategoriaGrupo(String nombre) {
+	private CategoriaNota(String nombre) {
 		this.nombre = nombre;
 	}
 
@@ -14,12 +14,12 @@ public enum CategoriaGrupo {
 	}
 
 	/**
-	 * Obtiene el arreglo de los valores de los nombres de la categoria del grupo
+	 * Obtiene el arreglo de los valores de los nombres de la categoria de la nota
 	 *
 	 * @return
 	 */
 	public static String[] textValues() {
-		CategoriaGrupo[] values = CategoriaGrupo.values();
+		CategoriaNota[] values = CategoriaNota.values();
 		String[] textValues = new String[values.length];
 		for (int i = 0; i < values.length; i++)
 			textValues[i] = values[i].getNombre();
@@ -27,15 +27,15 @@ public enum CategoriaGrupo {
 	}
 
 	/**
-	 * Obtiene la categoria del grupo a partir de su nombre, si no se encuentra se
+	 * Obtiene la categoria de la nota a partir de su nombre, si no se encuentra se
 	 * retorna un null
 	 *
 	 * @param nombre
 	 * @return
 	 */
-	public static CategoriaGrupo obtenerCategoriaDeNombre(String nombre) {
-		CategoriaGrupo[] values = CategoriaGrupo.values();
-		for (CategoriaGrupo categoria : values)
+	public static CategoriaNota obtenerCategoriaDeNombre(String nombre) {
+		CategoriaNota[] values = CategoriaNota.values();
+		for (CategoriaNota categoria : values)
 			if (categoria.getNombre().equals(nombre))
 				return categoria;
 		return null;

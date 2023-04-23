@@ -5,10 +5,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.GrupoException;
+import co.edu.uniquindio.p2.agentatelefonica.util.Utility;
 
 public class Contacto implements Serializable {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private final String nombre;
@@ -20,7 +21,7 @@ public class Contacto implements Serializable {
 
 	/**
 	 * Es el constructor de la clase contacto
-	 * 
+	 *
 	 * @param nombre
 	 * @param alias
 	 * @param direccion
@@ -43,7 +44,7 @@ public class Contacto implements Serializable {
 
 	/**
 	 * Es el constructor de la clase contacto
-	 * 
+	 *
 	 * @param nombre
 	 * @param alias
 	 * @param direccion
@@ -60,7 +61,7 @@ public class Contacto implements Serializable {
 		this.direccion = direccion;
 		this.telefono = telefono;
 		this.email = email;
-		createGroupArrIfNull();
+		this.gruposALosQuePertenece = new Grupo[0];
 	}
 
 	public Contacto(String nombre, String telefono) {
@@ -69,13 +70,30 @@ public class Contacto implements Serializable {
 		this.telefono = telefono;
 	}
 
-	public boolean exists() {
-		return nombre != null && telefono != null;
+	/**
+	 * Determina si el contacto tiene una direccion especifica
+	 *
+	 * @param direccion
+	 * @return
+	 */
+	public boolean tieneDireccion(String direccion) {
+		return this.direccion.equals(direccion);
 	}
 
-	private void createGroupArrIfNull() {
-		if (gruposALosQuePertenece == null)
-			this.gruposALosQuePertenece = new Grupo[0];
+	/**
+	 * Determina si el nombre del Contacto tiene unas letras especificas, usa el
+	 * metodo un metodo de {@link Utility}
+	 *
+	 * @see {@link Utility#cadenaTieneLetras(String, String)}
+	 * @param letras
+	 * @return true si tiene todos los caracteres de las letras al menos una vez
+	 */
+	public boolean nombreTieneLetras(String letras) {
+		return Utility.cadenaTieneLetras(nombre, letras);
+	}
+
+	public boolean exists() {
+		return nombre != null && telefono != null;
 	}
 
 	public void addGrupo(Grupo grupo) {
@@ -83,9 +101,8 @@ public class Contacto implements Serializable {
 		if (pos == -1) {
 			pos = gruposALosQuePertenece.length;
 			gruposALosQuePertenece = Arrays.copyOf(gruposALosQuePertenece, pos + 1);
-			gruposALosQuePertenece[pos] = grupo;
-		} else
-			gruposALosQuePertenece[pos] = grupo;
+		}
+		gruposALosQuePertenece[pos] = grupo;
 	}
 
 	public void removeGrupo(Grupo grupo) throws GrupoException {
@@ -113,7 +130,7 @@ public class Contacto implements Serializable {
 
 	/**
 	 * Es el constructor vacio de la clase contacto sin parametros
-	 * 
+	 *
 	 * @see
 	 *      <li>{@link #Contacto(String, String, String, String, String)}
 	 *      <li>{@link #Contacto(String, String, String, String, String, Grupo[])}
