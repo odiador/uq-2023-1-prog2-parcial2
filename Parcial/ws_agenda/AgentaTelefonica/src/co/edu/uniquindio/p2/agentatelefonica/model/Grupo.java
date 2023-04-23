@@ -17,7 +17,7 @@ public class Grupo implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String nombre;
-	private Categoria categoria;
+	private CategoriaGrupo categoria;
 	private Contacto[] listaContactos;
 
 	/**
@@ -26,7 +26,7 @@ public class Grupo implements Serializable {
 	 * @param nombre
 	 * @param categoria
 	 */
-	public Grupo(String nombre, Categoria categoria) {
+	public Grupo(String nombre, CategoriaGrupo categoria) {
 		super();
 		this.nombre = nombre;
 		this.categoria = categoria;
@@ -151,14 +151,14 @@ public class Grupo implements Serializable {
 	/**
 	 * @return the categoria
 	 */
-	public Categoria getCategoria() {
+	public CategoriaGrupo getCategoria() {
 		return categoria;
 	}
 
 	/**
 	 * @param categoria the categoria to set
 	 */
-	public void setCategoria(Categoria categoria) {
+	public void setCategoria(CategoriaGrupo categoria) {
 		this.categoria = categoria;
 	}
 

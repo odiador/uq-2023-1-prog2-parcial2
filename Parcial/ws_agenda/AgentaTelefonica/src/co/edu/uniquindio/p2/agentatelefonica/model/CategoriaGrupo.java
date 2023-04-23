@@ -1,11 +1,11 @@
 package co.edu.uniquindio.p2.agentatelefonica.model;
 
-public enum Categoria {
+public enum CategoriaGrupo {
 	OFICINA("Oficina"), FIESTA("Fiesta"), AMIGOS("Amigos"), FAMILIA("Familia");
 
 	private String nombre;
 
-	private Categoria(String nombre) {
+	private CategoriaGrupo(String nombre) {
 		this.nombre = nombre;
 	}
 
@@ -14,7 +14,7 @@ public enum Categoria {
 	}
 
 	public static String[] textValues() {
-		Categoria[] values = Categoria.values();
+		CategoriaGrupo[] values = CategoriaGrupo.values();
 		String[] textValues = new String[values.length];
 		for (int i = 0; i < values.length; i++)
 			textValues[i] = values[i].getNombre();

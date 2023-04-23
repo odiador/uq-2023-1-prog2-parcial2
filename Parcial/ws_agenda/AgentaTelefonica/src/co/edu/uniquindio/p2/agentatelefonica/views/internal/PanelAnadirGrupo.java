@@ -1,7 +1,7 @@
 package co.edu.uniquindio.p2.agentatelefonica.views.internal;
 
 import co.edu.uniquindio.p2.agentatelefonica.controllers.CtrlGrupo;
-import co.edu.uniquindio.p2.agentatelefonica.model.Categoria;
+import co.edu.uniquindio.p2.agentatelefonica.model.CategoriaGrupo;
 import co.edu.uniquindio.p2.agentatelefonica.util.Boton;
 import co.edu.uniquindio.p2.agentatelefonica.util.Utility;
 import javafx.collections.FXCollections;
@@ -26,7 +26,7 @@ public class PanelAnadirGrupo extends BorderPane {
 		TextField tfNombre = new TextField();
 		ComboBox<String> comboCategoria = new ComboBox<String>();
 
-		comboCategoria.setItems(FXCollections.observableArrayList(Categoria.textValues()));
+		comboCategoria.setItems(FXCollections.observableArrayList(CategoriaGrupo.textValues()));
 		VBox vbox = new VBox(20);
 		HBox hbox = new HBox();
 		Boton botonVolver = new Boton("Volver", eventoVolver, "btn-volver");
