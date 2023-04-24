@@ -1,5 +1,7 @@
 package co.edu.uniquindio.p2.agentatelefonica.util;
 
+import java.time.LocalDate;
+
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.CampoException;
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.ObjetoNoExisteException;
 import javafx.animation.KeyFrame;
@@ -145,5 +147,81 @@ public class Utility {
 			if (stringbuilder.indexOf(Character.toString(letras.toLowerCase().charAt(i))) == -1)
 				return false;
 		return true;
+	}
+
+	/**
+	 * Obtiene la fecha inicial y final de un mes, es determinada por la fecha
+	 * enviada por parámetos y la cantidad de meses a agregar de esta
+	 *
+	 * @param fecha
+	 * @param cantMesesAgregar
+	 * @return
+	 */
+	public static Relacion<LocalDate, LocalDate> obtenerDiaMinimoMaximo(LocalDate fecha, int cantMesesAgregar) {
+		LocalDate fechaNueva = fecha.plusMonths(cantMesesAgregar);
+		LocalDate fechaMenor = fechaNueva.minusDays(fechaNueva.getDayOfMonth() - 1);
+		LocalDate fechaMayor = fechaNueva.plusMonths(1);
+		fechaMayor = fechaMayor.minusDays(fechaMayor.getDayOfMonth());
+		return new Relacion<LocalDate, LocalDate>(fechaMenor, fechaMayor);
+	}
+
+	/**
+	 * Obtiene el ancho mayor de una matriz de cualquier objeto sin contar nulls
+	 *
+	 * @param matriz
+	 * @return
+	 */
+	public static int obtenerAnchoMayorMatriz(Object[][] matriz) {
+		int cantidad = 0;
+		for (int i = 0; i < matriz.length; i++) {
+			int canAux = Utility.obtenerCantidadMayorArr(matriz[i]);
+			if (canAux > cantidad)
+				cantidad = canAux;
+		}
+		return cantidad;
+	}
+
+	/**
+	 * Obtiene el ancho de una matriz sin contar nulls
+	 *
+	 * @param asda
+	 * @return
+	 */
+	public static int obtenerCantidadMayorArr(Object[] asda) {
+		int cantidad = 0;
+		for (int i = 0; i < asda.length; i++) {
+			if (asda[i] != null)
+				cantidad++;
+		}
+		return cantidad;
+	}
+
+	/**
+	 * Determina si un arreglo de objetos tiene todos los objetos null o no
+	 *
+	 * @param arregloObjetos
+	 * @return
+	 */
+	public static boolean arregloTieneTodoNulls(Object[] arregloObjetos) {
+		for (Object objeto : arregloObjetos)
+			if (objeto != null)
+				return false;
+		return true;
+	}
+
+	/**
+	 * Determina la cantidad filas en la matriz que tengan todos sus elementos como
+	 * null
+	 *
+	 * @param matrizObjetos
+	 * @return
+	 */
+	public static int obtenerCantFilasTodoNull(Object[][] matrizObjetos) {
+		int cantidadAllNull = 0;
+		for (Object[] arregloObjetos : matrizObjetos) {
+			if (arregloTieneTodoNulls(arregloObjetos))
+				cantidadAllNull++;
+		}
+		return cantidadAllNull;
 	}
 }

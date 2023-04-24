@@ -111,6 +111,18 @@ public class Reunion implements Serializable {
 	}
 
 	/**
+	 * Determina si una reunion tiene la fecha en un rango determinado
+	 *
+	 * @param fechaMenor
+	 * @param fechaMayor
+	 * @return
+	 */
+	public boolean esEnRangoFecha(LocalDate fechaMenor, LocalDate fechaMayor) {
+		return (fecha.isAfter(fechaMenor) || fecha.isEqual(fechaMenor))
+				&& (fecha.isBefore(fechaMayor) || fecha.isEqual(fechaMayor));
+	}
+
+	/**
 	 * Determina si el contacto existe o no dependiendo de que si la posicion del
 	 * contacto no sea null
 	 *
@@ -222,8 +234,14 @@ public class Reunion implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("Reunion [nombre=%s, listaContactos=%s, descripcion=%s, fecha=%s, hora=%s, listaNotas=%s]",
-				nombre, Arrays.toString(listaContactos), descripcion, fecha, hora, Arrays.toString(listaNotas));
+		return !existe() ? "Reunion [?]"
+				: String.format(
+						"Reunion [nombre=%s, listaContactos=%s, descripcion=%s, fecha=%s, hora=%s, listaNotas=%s]",
+						nombre, Arrays.toString(listaContactos), descripcion, fecha, hora, Arrays.toString(listaNotas));
+	}
+
+	private boolean existe() {
+		return fecha != null && nombre != null && descripcion != null && hora != null;
 	}
 
 }

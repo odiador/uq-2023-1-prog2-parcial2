@@ -1,6 +1,7 @@
 package co.edu.uniquindio.p2.agentatelefonica.model;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,6 +12,7 @@ import co.edu.uniquindio.p2.agentatelefonica.exceptions.ArregloLlenoException;
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.ContactoException;
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.ObjetoNoExisteException;
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.ReunionException;
+import co.edu.uniquindio.p2.agentatelefonica.util.Relacion;
 import co.edu.uniquindio.p2.agentatelefonica.util.Utility;
 
 public class Agenda implements Serializable {
@@ -57,6 +59,107 @@ public class Agenda implements Serializable {
 	 */
 	public void eliminarContactosLetras(char... caracteres) {
 		eliminarContactosLetras(new StringBuilder().append(caracteres).toString());
+	}
+
+	/**
+	 * <b>[PUNTO #4]</b><br>
+	 * Obtiene una matriz de las reuniones, cada fila representa un mes, el primer
+	 * mes es derivado de la fechaInicial y la cantidad de meses (la cantidad de
+	 * filas) es indicada por {@code cantRangos}
+	 *
+	 * @param fechaInicial
+	 * @param cantRangos
+	 * @return
+	 */
+	public Reunion[][] obtenerMatrizReunionesFechas(LocalDate fechaInicial, int cantRangos) {
+		Reunion[][] asda = new Reunion[cantRangos][obtenerCantEspaciosReunionOcupados()];
+		for (int i = 0; i < cantRangos; i++) {
+			Relacion<LocalDate, LocalDate> minimoMaximo = Utility.obtenerDiaMinimoMaximo(fechaInicial, i);
+			ArrayList<Reunion> asa = obtenerReunionesEnRangoFechas(minimoMaximo.getValor1(), minimoMaximo.getValor2());
+			asda[i] = (Reunion[]) asa.toArray(new Reunion[obtenerCantEspaciosReunionOcupados()]);
+		}
+		return recortarMatrizReunionAnchoMayor(asda);
+	}
+
+	/**
+	 * <b>[PUNTO #4]</b><br>
+	 * Obtiene una matriz de las reuniones, cada fila representa un mes, el primer
+	 * mes es derivado de la fechaInicial y la cantidad de meses es determinada por
+	 * el mes maximo de las reuniones
+	 *
+	 * @param fechaInicial
+	 * @return
+	 */
+	public Reunion[][] obtenerMatrizReunionesFechas(LocalDate fechaInicial) {
+		Reunion[][] obtenerMatrizReunionesFechas = obtenerMatrizReunionesFechas(fechaInicial,
+				obtenerCantEspaciosReunionOcupados());
+		return eliminarEspaciosQueTengaTodoNull(obtenerMatrizReunionesFechas);
+
+	}
+
+	/**
+	 * Elimina los espacios de la reunion que sean todos null, es util para cuando
+	 * no se sabe la altura de la matriz y al final sobran bloques de null
+	 *
+	 * @param matrizReuniones
+	 * @return
+	 */
+	private Reunion[][] eliminarEspaciosQueTengaTodoNull(Reunion[][] matrizReuniones) {
+		int espaciosTodoNull = Utility.obtenerCantFilasTodoNull(matrizReuniones);
+		int tamFinal = matrizReuniones.length - espaciosTodoNull;
+		return Arrays.copyOf(matrizReuniones, tamFinal);
+	}
+
+	/**
+	 * Recorta la matriz de reuniones para que quede con el maximo ancho del que no
+	 * sobren nulls
+	 *
+	 * @param matrizReuniones
+	 * @return
+	 */
+	private Reunion[][] recortarMatrizReunionAnchoMayor(Reunion[][] matrizReuniones) {
+		int cantMaxima = Utility.obtenerAnchoMayorMatriz(matrizReuniones);
+		for (int i = 0; i < matrizReuniones.length; i++)
+			matrizReuniones[i] = Arrays.copyOf(matrizReuniones[i], cantMaxima);
+		return matrizReuniones;
+	}
+
+	/**
+	 * <b>[PUNTO #4]</b><br>
+	 * Obtiene las reuniones que estan en un rango de fechas especifico
+	 *
+	 * @param fechaMenor
+	 * @param fechaMayor
+	 * @return
+	 */
+	public ArrayList<Reunion> obtenerReunionesEnRangoFechas(LocalDate fechaMenor, LocalDate fechaMayor) {
+		ArrayList<Reunion> listaReunionesRango = new ArrayList<Reunion>();
+		for (Reunion reunion : listaReuniones) {
+			if (reunion == null)
+				continue;
+			if (reunion.esEnRangoFecha(fechaMenor, fechaMayor))
+				listaReunionesRango.add(reunion);
+		}
+		return listaReunionesRango;
+	}
+
+	/**
+	 * Obtiene la cantidad de espacios libres de la reunion
+	 *
+	 * @return
+	 */
+	public int obtenerCantEspaciosReunionLibres() {
+		return Arrays.stream(listaReuniones).filter(reunion -> reunion == null)
+				.collect(Collectors.toCollection(ArrayList::new)).size();
+	}
+
+	/**
+	 * Obtiene la cantidad de espacios ocupados de la reunion
+	 *
+	 * @return
+	 */
+	public int obtenerCantEspaciosReunionOcupados() {
+		return listaReuniones.length - obtenerCantEspaciosReunionLibres();
 	}
 
 	/**
