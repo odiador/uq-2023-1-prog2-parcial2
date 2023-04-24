@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.GrupoException;
+import co.edu.uniquindio.p2.agentatelefonica.util.ProjectUtility;
 import co.edu.uniquindio.p2.agentatelefonica.util.Utility;
 
 public class Contacto implements Serializable {
@@ -84,12 +85,12 @@ public class Contacto implements Serializable {
 	 * Determina si el nombre del Contacto tiene unas letras especificas, usa el
 	 * metodo un metodo de {@link Utility}
 	 *
-	 * @see {@link Utility#cadenaTieneLetras(String, String)}
+	 * @see {@link ProjectUtility#cadenaTieneLetras(String, String)}
 	 * @param letras
 	 * @return true si tiene todos los caracteres de las letras al menos una vez
 	 */
 	public boolean nombreTieneLetras(String letras) {
-		return Utility.cadenaTieneLetras(nombre, letras);
+		return ProjectUtility.cadenaTieneLetras(nombre, letras);
 	}
 
 	public boolean exists() {

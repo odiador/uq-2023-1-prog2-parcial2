@@ -12,6 +12,7 @@ import co.edu.uniquindio.p2.agentatelefonica.exceptions.ArregloLlenoException;
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.ContactoException;
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.ObjetoNoExisteException;
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.ReunionException;
+import co.edu.uniquindio.p2.agentatelefonica.util.ProjectUtility;
 import co.edu.uniquindio.p2.agentatelefonica.util.Relacion;
 import co.edu.uniquindio.p2.agentatelefonica.util.Utility;
 
@@ -74,7 +75,7 @@ public class Agenda implements Serializable {
 	public Reunion[][] obtenerMatrizReunionesFechas(LocalDate fechaInicial, int cantRangos) {
 		Reunion[][] asda = new Reunion[cantRangos][obtenerCantEspaciosReunionOcupados()];
 		for (int i = 0; i < cantRangos; i++) {
-			Relacion<LocalDate, LocalDate> minimoMaximo = Utility.obtenerDiaMinimoMaximo(fechaInicial, i);
+			Relacion<LocalDate, LocalDate> minimoMaximo = ProjectUtility.obtenerDiaMinimoMaximo(fechaInicial, i);
 			ArrayList<Reunion> asa = obtenerReunionesEnRangoFechas(minimoMaximo.getValor1(), minimoMaximo.getValor2());
 			asda[i] = (Reunion[]) asa.toArray(new Reunion[obtenerCantEspaciosReunionOcupados()]);
 		}
@@ -105,7 +106,7 @@ public class Agenda implements Serializable {
 	 * @return
 	 */
 	private Reunion[][] eliminarEspaciosQueTengaTodoNull(Reunion[][] matrizReuniones) {
-		int espaciosTodoNull = Utility.obtenerCantFilasTodoNull(matrizReuniones);
+		int espaciosTodoNull = ProjectUtility.obtenerCantFilasTodoNull(matrizReuniones);
 		int tamFinal = matrizReuniones.length - espaciosTodoNull;
 		return Arrays.copyOf(matrizReuniones, tamFinal);
 	}
@@ -118,7 +119,7 @@ public class Agenda implements Serializable {
 	 * @return
 	 */
 	private Reunion[][] recortarMatrizReunionAnchoMayor(Reunion[][] matrizReuniones) {
-		int cantMaxima = Utility.obtenerAnchoMayorMatriz(matrizReuniones);
+		int cantMaxima = ProjectUtility.obtenerAnchoMayorMatriz(matrizReuniones);
 		for (int i = 0; i < matrizReuniones.length; i++)
 			matrizReuniones[i] = Arrays.copyOf(matrizReuniones[i], cantMaxima);
 		return matrizReuniones;
