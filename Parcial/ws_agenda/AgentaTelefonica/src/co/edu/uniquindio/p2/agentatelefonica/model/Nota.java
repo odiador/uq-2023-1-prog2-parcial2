@@ -1,5 +1,6 @@
 package co.edu.uniquindio.p2.agentatelefonica.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +11,11 @@ import co.edu.uniquindio.p2.agentatelefonica.exceptions.NotaException;
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.ObjetoNoExisteException;
 import co.edu.uniquindio.p2.agentatelefonica.util.Utility;
 
-public class Nota {
+public class Nota implements Serializable {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
 	private final String codigo;
 	private LocalDate fecha;
 	private String[] comentarios;
