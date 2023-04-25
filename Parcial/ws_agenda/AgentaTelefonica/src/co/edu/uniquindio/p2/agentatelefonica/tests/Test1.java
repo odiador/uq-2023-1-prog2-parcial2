@@ -9,22 +9,40 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class Test1 {
-	@Test
-	public void testPunto4() {
-		Agenda a = new Agenda("asda", 10, 10, 10);
+	Agenda a = new Agenda("asda", 10, 20, 10);
 
-		for (int i = 0; i < 10; i++)
+	@Before
+	public void inicializarReuniones() {
+
+		LocalDate plusMonths = LocalDate.of(2022, 11, 29);
+		for (int i = 0; i < 20; i++)
 			try {
 				char caracter = (char) (i + 'a');
 				String nombre = "" + caracter;
-				Reunion reunion = new Reunion(nombre, "asdad", LocalDate.now().plusDays(i * 10), LocalTime.now());
+				Reunion reunion = new Reunion(nombre, "asdad", plusMonths.plusDays(i * 4), LocalTime.now());
 				a.agregarReunion(reunion);
 			} catch (ObjetoNoExisteException | ReunionException | ArregloLlenoException e) {
 				System.err.println(e.getMessage());
 			}
+	}
+
+	@Test
+	public void testPunto4() {
+
+		Reunion[][] matrizReunionesFechas = a.obtenerMatrizReunionesFechas();
+		System.out.println(matrizReunionesFechas.length);
+		for (int i = 0; i < matrizReunionesFechas.length; i++) {
+			System.out.println(Arrays.toString(matrizReunionesFechas[i]));
+		}
+	}
+
+	@Test
+	public void testEjemploPunto4() {
+
 		Reunion[][] matrizReunionesFechas = a.obtenerMatrizReunionesFechas(LocalDate.now());
 		System.out.println(matrizReunionesFechas.length);
 		for (int i = 0; i < matrizReunionesFechas.length; i++) {
