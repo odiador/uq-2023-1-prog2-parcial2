@@ -67,23 +67,77 @@ public class Agenda implements Serializable {
 	 * Obtiene una matriz de las reuniones, cada fila representa un mes, el primer
 	 * mes es derivado de la fechaInicial y la cantidad de meses (la cantidad de
 	 * filas) es indicada por {@code cantRangos}
+	 * <li><b> Fila 0 </b>(representa a las reuniones que estén entre la fecha
+	 * 01-11-2022 y 30-11-2022)
+	 * <li><b> Fila 1 </b>(representa a las reuniones que estén entre la fecha
+	 * 01-12-2022 y 31-12-2022)
+	 * <li><b> Fila 2 </b>(representa a las reuniones que estén entre la fecha
+	 * 01-01-2022 y 30-12-2022)</b></li> <br>
+	 * <b>Nota:</b> el ancho de la matriz se ajusta para que no tenga columnas de
+	 * nulls sobrantes, pero la matriz en sì puede tener lugares con valores null
+	 *
+	 * @return la matriz de reuniones con esas especificaciones
+	 */
+	public Reunion[][] obtenerMatrizReunionesFechas() {
+		// crea una fecha cualquiera del mes de noviembre, el metodo
+		// obtenerMatrizReunionesFechas ya organiza los días para que den con el
+		// resultado
+		LocalDate fechaInicial = LocalDate.of(2022, 11, 20);
+		// obtiene la matriz de los ultimos 2 meses
+		Reunion[][] matrizReunionesFechas = obtenerMatrizReunionesFechasSinRecortar(fechaInicial, 2);
+		// prepara la matriz para agregarle una nueva fila
+		int pos = matrizReunionesFechas.length;
+		matrizReunionesFechas = Arrays.copyOf(matrizReunionesFechas, pos + 1);
+		// prepara la matriz para que en la ultima fila quede el arreglo de las
+		// reuniones que esten entre el 01/01/2022 y el 30/12/2022
+		LocalDate fechaInicialAnio = LocalDate.of(2022, 1, 1);
+		LocalDate fechaFinalAnio = LocalDate.of(2022, 12, 30);
+		// obtiene las reuniones que esten en el año 2022 sin contar el 31 de diciembre
+		ArrayList<Reunion> asa = obtenerReunionesEnRangoFechas(fechaInicialAnio, fechaFinalAnio);
+		// las reuniones se agregan a la matriz en la ultima fila
+		matrizReunionesFechas[pos] = (Reunion[]) asa.toArray(new Reunion[obtenerCantEspaciosReunionOcupados()]);
+		// se recorta el ancho para que quede la misma matriz quitando los valores nulls
+		// sobrantes a la derecha
+		return recortarMatrizReunionAnchoMayor(matrizReunionesFechas);
+	}
+
+	/**
+	 * <b>[PARTE PUNTO #4]</b><br>
+	 * Obtiene una matriz de las reuniones, cada fila representa un mes, el primer
+	 * mes es derivado de la fechaInicial y la cantidad de meses (la cantidad de
+	 * filas) es indicada por {@code cantRangos}, el ancho es la cantidad de
+	 * reuniones ocupadas de la agenda
+	 *
+	 * @param fechaInicial
+	 * @param cantRangos
+	 * @return
+	 */
+	public Reunion[][] obtenerMatrizReunionesFechasSinRecortar(LocalDate fechaInicial, int cantRangos) {
+		Reunion[][] matrizReunionesSinRec = new Reunion[cantRangos][obtenerCantEspaciosReunionOcupados()];
+		for (int i = 0; i < cantRangos; i++) {
+			Relacion<LocalDate, LocalDate> minimoMaximo = ProjectUtility.obtenerDiaMinimoMaximo(fechaInicial, i);
+			ArrayList<Reunion> asa = obtenerReunionesEnRangoFechas(minimoMaximo.getValor1(), minimoMaximo.getValor2());
+			matrizReunionesSinRec[i] = (Reunion[]) asa.toArray(new Reunion[obtenerCantEspaciosReunionOcupados()]);
+		}
+		return matrizReunionesSinRec;
+	}
+
+	/**
+	 * <b>[PARTE PUNTO #4]</b><br>
+	 * Obtiene una matriz de las reuniones, cada fila representa un mes, el primer
+	 * mes es derivado de la fechaInicial y la cantidad de meses (la cantidad de
+	 * filas) es indicada por {@code cantRangos}
 	 *
 	 * @param fechaInicial
 	 * @param cantRangos
 	 * @return
 	 */
 	public Reunion[][] obtenerMatrizReunionesFechas(LocalDate fechaInicial, int cantRangos) {
-		Reunion[][] asda = new Reunion[cantRangos][obtenerCantEspaciosReunionOcupados()];
-		for (int i = 0; i < cantRangos; i++) {
-			Relacion<LocalDate, LocalDate> minimoMaximo = ProjectUtility.obtenerDiaMinimoMaximo(fechaInicial, i);
-			ArrayList<Reunion> asa = obtenerReunionesEnRangoFechas(minimoMaximo.getValor1(), minimoMaximo.getValor2());
-			asda[i] = (Reunion[]) asa.toArray(new Reunion[obtenerCantEspaciosReunionOcupados()]);
-		}
-		return recortarMatrizReunionAnchoMayor(asda);
+		return recortarMatrizReunionAnchoMayor(obtenerMatrizReunionesFechasSinRecortar(fechaInicial, cantRangos));
 	}
 
 	/**
-	 * <b>[PUNTO #4]</b><br>
+	 * <b>[PARTE PUNTO #4]</b><br>
 	 * Obtiene una matriz de las reuniones, cada fila representa un mes, el primer
 	 * mes es derivado de la fechaInicial y la cantidad de meses es determinada por
 	 * el mes maximo de las reuniones
@@ -123,6 +177,15 @@ public class Agenda implements Serializable {
 		for (int i = 0; i < matrizReuniones.length; i++)
 			matrizReuniones[i] = Arrays.copyOf(matrizReuniones[i], cantMaxima);
 		return matrizReuniones;
+	}
+
+	public static void main(String[] args) {
+		LocalDate fecha = LocalDate.now().minusYears(1);
+		LocalDate fechaMenor = LocalDate.of(fecha.getYear(), 1, 1);
+		LocalDate fechaMayor = LocalDate.of(fecha.getYear(), 12, 30);
+		System.out.println(fecha);
+		System.out.println(fechaMenor);
+		System.out.println(fechaMayor);
 	}
 
 	/**
