@@ -554,6 +554,15 @@ public class Agenda implements Serializable {
 		this.listaGrupos = listaGrupos;
 	}
 
+	/**
+	 * Obtiene la lista de contactos que tengan un telefono capicua
+	 * 
+	 * @return
+	 */
+	public List<Contacto> obtenerListaContactosTelefonoCapicua() {
+		return Arrays.stream(listaContactos).filter(Contacto::tieneNumeroCapicua).collect(Collectors.toList());
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(nombre);

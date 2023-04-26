@@ -211,6 +211,15 @@ public class Contacto implements Serializable {
 		this.gruposALosQuePertenece = gruposALosQuePertenece;
 	}
 
+	/**
+	 * Determina si un concacto tiene su numero capicua
+	 * 
+	 * @return
+	 */
+	public boolean tieneNumeroCapicua() {
+		return ProjectUtility.esCapicua(telefono);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

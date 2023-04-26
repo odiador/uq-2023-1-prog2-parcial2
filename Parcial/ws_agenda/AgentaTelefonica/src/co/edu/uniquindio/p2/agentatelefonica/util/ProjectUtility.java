@@ -106,4 +106,17 @@ public class ProjectUtility {
 		return true;
 	}
 
+	/**
+	 * Determina si una cadena es capicua o no lo es
+	 * 
+	 * @param telefono
+	 * @return
+	 */
+	public static boolean esCapicua(String telefono) {
+		StringBuilder sb = new StringBuilder(telefono);
+		// voltea el string builder que tiene el telefono y lo convierte en un string
+		String onofelet = sb.reverse().toString();
+		return telefono.equals(onofelet);
+	}
+
 }
