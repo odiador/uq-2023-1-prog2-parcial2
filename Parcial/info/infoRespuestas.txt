@@ -1,0 +1,4 @@
+La primera A esta en model en Diagrama Parcial.png
+La primera B esta tambien en model Diagrama Parcial.png y en la clase Nota
+La segunda, la tercera y la cuarta estan en la clase Agenda.java y cada respuesta tiene en el javadoc "[PUNTO #X]"
+La quinta esta en model Punto 5.jpg
