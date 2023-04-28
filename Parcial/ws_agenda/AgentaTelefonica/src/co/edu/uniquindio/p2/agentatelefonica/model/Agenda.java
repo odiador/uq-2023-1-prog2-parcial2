@@ -54,6 +54,92 @@ public class Agenda implements Serializable {
 
 	/**
 	 * <b>[PUNTO #2]</b><br>
+	 * Filtra los contactos por grupo, recibe como parámetro un objeto Grupo y
+	 * devuelve una lista de contactos que pertenecen a ese grupo
+	 * 
+	 * @param g
+	 * @return
+	 */
+	public List<Contacto> buscarContactosGrupo(Grupo g) {
+		return Arrays.stream(listaContactos).filter(contacto -> contacto != null)
+				.filter(contacto -> contacto.perteneceAlGrupo(g)).collect(Collectors.toList());
+	}
+
+	/**
+	 * <b>[PUNTO #3]</b><br>
+	 * Retorna una matriz con las notas cada fila representa un conjunto de notas.
+	 * <li>Fila 0 (representa a las notas que hacen parte de las reuniones que estén
+	 * entre la fecha 01-11-2022 y 30-11-2022)
+	 * <li>Fila 1 (representa a las notas que hacen parte de las reuniones que estén
+	 * entre la fecha 01-12-2022 y 31-12-2022)
+	 * <li>Fila 2 (representa a las notas que hacen parte de las reuniones que estén
+	 * entre la fecha 01-01-2022 y 30-12-2022)
+	 * 
+	 * Obtiene la matriz de notas que estan en 3 rangos diferentes
+	 * 
+	 * @return
+	 */
+	public Nota[][] obtenerMatrizEnRangoFechas() {
+		// obtiene las notas que tienen las reuniniones en un rango de fechas
+		// especificas
+		ArrayList<Nota> notasReunionFecha1 = obtenerArrNotasReunionFecha(LocalDate.of(2022, 11, 1),
+				LocalDate.of(2022, 11, 30));
+		ArrayList<Nota> notasReunionFecha2 = obtenerArrNotasReunionFecha(LocalDate.of(2022, 12, 1),
+				LocalDate.of(2022, 12, 31));
+		ArrayList<Nota> notasReunionFecha3 = obtenerArrNotasReunionFecha(LocalDate.of(2022, 1, 1),
+				LocalDate.of(2022, 12, 30));
+		// obtiene la matriz de las notas con el ancho maximo necesario
+		Nota[][] matrizNotasReunionFecha = obtenerMatrizNotasTamMaximo(notasReunionFecha1, notasReunionFecha2,
+				notasReunionFecha3);
+		return matrizNotasReunionFecha;
+	}
+
+	/**
+	 * <b>[PUNTO #4]</b><br>
+	 * Busca los contactos que tengan un numero de telefono que empiece por un
+	 * sufijo
+	 * 
+	 * @param prefijo
+	 * @return
+	 */
+	public List<Contacto> buscarContactosNumeroPrefijo(String prefijo) {
+		return Arrays.stream(listaContactos).filter(contacto -> contacto != null)
+				.filter(contacto -> contacto.tieneTelefonoPrefijo(prefijo)).collect(Collectors.toList());
+	}
+
+	/**
+	 * Obtiene la matriz de las notas con el ancho maximo necesario, la cantidad de
+	 * arraylist enviada no puede ser 0
+	 * 
+	 * @param matrizNotasReunionFechas
+	 * @return
+	 */
+	@SafeVarargs	
+	private static Nota[][] obtenerMatrizNotasTamMaximo(ArrayList<Nota>... matrizNotasReunionFechas) {
+		int mayorTamArrayList = ProjectUtility.obtenerMayorTamArrayList(matrizNotasReunionFechas);
+		Nota[][] matrizNotasReunionFecha = new Nota[mayorTamArrayList][matrizNotasReunionFechas.length];
+		for (int i = 0; i < matrizNotasReunionFechas.length; i++)
+			matrizNotasReunionFecha[i] = (Nota[]) matrizNotasReunionFechas[i].toArray(new Nota[mayorTamArrayList]);
+
+		return matrizNotasReunionFecha;
+	}
+
+	/**
+	 * Retorna un arraylist que contiene las notas que estan dentro de las reuniones
+	 * que estan dentro de las fechas
+	 * 
+	 * @param fInicial
+	 * @param fFinal
+	 * @return
+	 */
+	private ArrayList<Nota> obtenerArrNotasReunionFecha(LocalDate fInicial, LocalDate fFinal) {
+		ArrayList<Reunion> reunionesEnRangoFecha = obtenerReunionesEnRangoFechas(fInicial, fFinal);
+		final ArrayList<Nota> notasReunion = new ArrayList<Nota>();
+		reunionesEnRangoFecha.stream().forEach(reunion -> notasReunion.addAll(reunion.listarNotas()));
+		return notasReunion;
+	}
+
+	/**
 	 * Elimina los contactos que contengan unos caracteres especificos
 	 *
 	 * @param caracteres
@@ -63,7 +149,6 @@ public class Agenda implements Serializable {
 	}
 
 	/**
-	 * <b>[PUNTO #4]</b><br>
 	 * Obtiene una matriz de las reuniones, cada fila representa un mes, el primer
 	 * mes es derivado de la fechaInicial y la cantidad de meses (la cantidad de
 	 * filas) es indicada por {@code cantRangos}
@@ -102,7 +187,7 @@ public class Agenda implements Serializable {
 	}
 
 	/**
-	 * <b>[PARTE PUNTO #4]</b><br>
+	 * 
 	 * Obtiene una matriz de las reuniones, cada fila representa un mes, el primer
 	 * mes es derivado de la fechaInicial y la cantidad de meses (la cantidad de
 	 * filas) es indicada por {@code cantRangos}, el ancho es la cantidad de
@@ -123,7 +208,6 @@ public class Agenda implements Serializable {
 	}
 
 	/**
-	 * <b>[PARTE PUNTO #4]</b><br>
 	 * Obtiene una matriz de las reuniones, cada fila representa un mes, el primer
 	 * mes es derivado de la fechaInicial y la cantidad de meses (la cantidad de
 	 * filas) es indicada por {@code cantRangos}
@@ -137,7 +221,6 @@ public class Agenda implements Serializable {
 	}
 
 	/**
-	 * <b>[PARTE PUNTO #4]</b><br>
 	 * Obtiene una matriz de las reuniones, cada fila representa un mes, el primer
 	 * mes es derivado de la fechaInicial y la cantidad de meses es determinada por
 	 * el mes maximo de las reuniones
@@ -179,17 +262,8 @@ public class Agenda implements Serializable {
 		return matrizReuniones;
 	}
 
-	public static void main(String[] args) {
-		LocalDate fecha = LocalDate.now().minusYears(1);
-		LocalDate fechaMenor = LocalDate.of(fecha.getYear(), 1, 1);
-		LocalDate fechaMayor = LocalDate.of(fecha.getYear(), 12, 30);
-		System.out.println(fecha);
-		System.out.println(fechaMenor);
-		System.out.println(fechaMayor);
-	}
-
 	/**
-	 * <b>[PUNTO #4]</b><br>
+	 * 
 	 * Obtiene las reuniones que estan en un rango de fechas especifico
 	 *
 	 * @param fechaMenor
@@ -242,7 +316,6 @@ public class Agenda implements Serializable {
 	}
 
 	/**
-	 * <b>[PUNTO #3]</b><br>
 	 * Lista todos los grupos que tengan un tipo especifico y que todos sus
 	 * contactos tengan una direccion especifica
 	 *
@@ -585,4 +658,5 @@ public class Agenda implements Serializable {
 		return String.format("Agenda [nombre=%s, listaContactos=%s, listaReuniones=%s, listaGrupos=%s]", nombre,
 				Arrays.toString(listaContactos), Arrays.toString(listaReuniones), Arrays.toString(listaGrupos));
 	}
+
 }

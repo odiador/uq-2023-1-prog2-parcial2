@@ -72,6 +72,17 @@ public class Contacto implements Serializable {
 	}
 
 	/**
+	 * <b>[PUNTO #4]</b><br>
+	 * Determina si el contacto tiene su telefono con un prefijo especifico
+	 * 
+	 * @param prefijo
+	 * @return
+	 */
+	public boolean tieneTelefonoPrefijo(String prefijo) {
+		return telefono != null && telefono.startsWith(prefijo);
+	}
+
+	/**
 	 * Determina si el contacto tiene una direccion especifica
 	 *
 	 * @param direccion
@@ -257,4 +268,18 @@ public class Contacto implements Serializable {
 				"Contacto [nombre=%s, alias=%s, direccion=%s, telefono=%s, email=%s, gruposALosQuePertenece=%s]",
 				nombre, alias, direccion, telefono, email, Arrays.toString(gruposALosQuePertenece));
 	}
+
+	/**
+	 * Retorna verdadero o falso si el grupo ingresado pertenecea; a la lista de
+	 * grupos
+	 * 
+	 * @param g
+	 * @return
+	 */
+	public boolean perteneceAlGrupo(Grupo g) {
+		Grupo grupoAux = Arrays.stream(gruposALosQuePertenece).filter(grupo -> grupo != null).filter(grupo -> grupo.equals(g)).findFirst()
+				.orElse(null);
+		return grupoAux != null;
+	}
+
 }

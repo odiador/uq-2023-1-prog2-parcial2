@@ -6,12 +6,14 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.ArregloLlenoException;
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.ContactoException;
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.ObjetoNoExisteException;
+import co.edu.uniquindio.p2.agentatelefonica.util.ProjectUtility;
 import co.edu.uniquindio.p2.agentatelefonica.util.Utility;
 
 public class Reunion implements Serializable {
@@ -80,6 +82,16 @@ public class Reunion implements Serializable {
 	}
 
 	/**
+	 * Lista las notas como un objeto de tipo List sin contar las notas que son
+	 * nulls
+	 * 
+	 * @return
+	 */
+	public List<Nota> listarNotas() {
+		return Arrays.stream(listaNotas).filter(nota -> nota != null).collect(Collectors.toList());
+	}
+
+	/**
 	 * Añade un contacto al arreglo de contactos, en caso de que este lleno se
 	 *
 	 * @param c
@@ -118,8 +130,7 @@ public class Reunion implements Serializable {
 	 * @return
 	 */
 	public boolean esEnRangoFecha(LocalDate fechaMenor, LocalDate fechaMayor) {
-		return (fecha.isAfter(fechaMenor) || fecha.isEqual(fechaMenor))
-				&& (fecha.isBefore(fechaMayor) || fecha.isEqual(fechaMayor));
+		return ProjectUtility.tieneFechaEnRango(fecha, fechaMenor, fechaMayor);
 	}
 
 	/**

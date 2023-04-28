@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.NotaException;
 import co.edu.uniquindio.p2.agentatelefonica.exceptions.ObjetoNoExisteException;
+import co.edu.uniquindio.p2.agentatelefonica.util.ProjectUtility;
 import co.edu.uniquindio.p2.agentatelefonica.util.Utility;
 
 public class Nota implements Serializable {
@@ -66,6 +67,43 @@ public class Nota implements Serializable {
 	public Nota() {
 		this.codigo = null;
 		this.comentarios = new String[0];
+	}
+
+	/**
+	 * <b>[PUNTO #3]</b><br>
+	 * Determina si la nota esta en un rango de fechas especifica
+	 * 
+	 * @param fechaMenor
+	 * @param fechaMayor
+	 * @return
+	 */
+	public boolean esEnRangoFecha(LocalDate fechaMenor, LocalDate fechaMayor) {
+		return ProjectUtility.tieneFechaEnRango(fecha, fechaMenor, fechaMayor);
+	}
+
+	/**
+	 * <b>[PUNTO #1 B] </b><br>
+	 * Este método busca todas las palabras de un comentario que empiecen con una
+	 * determinada letra, retorna un arreglo de Strings con los comentarios que
+	 * empiezan con esa letra
+	 * 
+	 * @param letra
+	 * @return
+	 */
+	public String[] calcComentariosEmpiezanLetra(char letra) {
+		StringBuilder sb = new StringBuilder();
+
+		for (String cadena : comentarios) {
+			if (cadena == null)
+				continue;
+			// le agrega la cadena y despues un espacio para poder hacer un split despues
+			sb.append(cadena);
+			sb.append(" ");
+		}
+		// separa las cadenas por palabra
+		String[] arrPalabraComentario = sb.toString().split(" ");
+		return Arrays.stream(arrPalabraComentario).filter(comm -> comm.length() >= 1)
+				.filter(comm -> comm.charAt(0) == letra).toArray(String[]::new);
 	}
 
 	/**

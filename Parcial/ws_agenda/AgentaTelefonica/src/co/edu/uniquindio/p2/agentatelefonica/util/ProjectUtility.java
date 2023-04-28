@@ -1,6 +1,7 @@
 package co.edu.uniquindio.p2.agentatelefonica.util;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class ProjectUtility {
 
@@ -117,6 +118,29 @@ public class ProjectUtility {
 		// voltea el string builder que tiene el telefono y lo convierte en un string
 		String onofelet = sb.reverse().toString();
 		return telefono.equals(onofelet);
+	}
+
+	/**
+	 * Determina si una fecha esta entre un rango de fechas especificas
+	 * 
+	 * @param fecha
+	 * @param fechaMenor
+	 * @param fechaMayor
+	 * @return
+	 */
+	public static boolean tieneFechaEnRango(LocalDate fecha, LocalDate fechaMenor, LocalDate fechaMayor) {
+		return fecha != null && (fecha.isAfter(fechaMenor) || fecha.isEqual(fechaMenor))
+				&& (fecha.isBefore(fechaMayor) || fecha.isEqual(fechaMayor));
+	}
+
+	public static int obtenerMayorTamArrayList(ArrayList<?>... listas) {
+		int mayor = Integer.MIN_VALUE;
+		for (ArrayList<?> arrayList : listas) {
+			int tamArrayList = arrayList.size();
+			if (tamArrayList >= mayor)
+				mayor = tamArrayList;
+		}
+		return mayor;
 	}
 
 }

@@ -3,6 +3,7 @@ package co.edu.uniquindio.p2.agentatelefonica.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -248,6 +249,14 @@ public class Grupo implements Serializable {
 	public String toString() {
 		return "Grupo [nombre=" + nombre + ", categoria=" + categoria + ", listaContactos="
 				+ Arrays.toString(listaContactos) + "]";
+	}
+
+	/**
+	 * Retorna una lista de contactos
+	 * @return
+	 */
+	public List<Contacto> getList() {
+		return Arrays.asList(listaContactos);
 	}
 
 }
